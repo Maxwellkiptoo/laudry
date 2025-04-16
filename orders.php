@@ -25,7 +25,7 @@ $result = $stmt->get_result();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard</title>
+    <title>User FreshFold Dashboard</title>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; }
         table { width: 80%; margin: auto; border-collapse: collapse; }

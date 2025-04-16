@@ -31,7 +31,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Make sure to close the connection at the very end, after all queries are completed
 $conn->close();
 ?>
 <!DOCTYPE html>
