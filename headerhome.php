@@ -12,7 +12,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laundry Management System</title>
+    <title>FreshFold</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -23,7 +23,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <p>Phone: <?php echo htmlspecialchars($user_phone); ?></p>
     </div>
 
-    <h1>Laundry Management System</h1>
+    <h1>FreshFold Dashboard</h1>
     <nav>
         <ul>
            <li><a href="home.php" class="<?php echo ($current_page == 'home.php') ? 'active' : ''; ?>">Dashboard</a></li>
