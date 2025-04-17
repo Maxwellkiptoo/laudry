@@ -1,8 +1,14 @@
 <?php
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require_once("PHPMailer/src/PHPMailer.php");
+require 'PHPMailer/src/SMTP.php';
+require 'PHPMailer/src/Exception.php';
+
 require_once("conn.php");
 require_once("header.php");
-
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = $_POST['name'];
@@ -12,22 +18,51 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $confirm_password = $_POST['confirm_password'];
 
     if ($password !== $confirm_password) {
-        echo "<script>alert('Error: Passwords do not match!)";
-                exit;
+        echo "<script>alert('Error: Passwords do not match!')</script>";
+        exit;
     }
+
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
     $sql = "INSERT INTO users (name, email, phone, password) VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
         $stmt->bind_param("ssss", $name, $email, $phone, $hashed_password);
+
         if ($stmt->execute()) {
-            echo "Account created successfully!";
-            header("Location: login.php");
-            exit;
+            // Send confirmation email
+            $mail = new PHPMailer(true);
+
+            try {
+                // SMTP Server Configuration
+                $mail->isSMTP();
+                $mail->Host       = 'smtp.gmail.com';
+                $mail->SMTPAuth   = true;
+                $mail->Username   = 'kiptoomaxwell82@gmail.com'; 
+                $mail->Password   = 'gvktixzyklwrzagq'; 
+                $mail->SMTPSecure = 'tls';
+                $mail->Port       = 587;
+
+                // Email Sender and Recipient
+                $mail->setFrom('kiptoomaxwell82@gmail.com', 'Laundry System');
+                $mail->addAddress($email, $name);
+
+                // Email Content
+                $mail->isHTML(true);
+                $mail->Subject = 'Welcome to Laundry System!';
+                $mail->Body    = "Hi <b>$name</b>,<br><br>Thank you for signing up! Your account has been created successfully.<br><br>Kind Regards,<br>Laundry Team";
+
+                $mail->send();
+                echo "<script>alert('Account created successfully! Confirmation email sent.'); window.location.href='login.php';</script>";
+                exit;
+
+            } catch (Exception $e) {
+                echo "Email could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            }
         } else {
             echo "Error: " . $stmt->error;
         }
+
         $stmt->close();
     } else {
         echo "Error: " . $conn->error;
@@ -37,12 +72,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FreshFold - Sign Up</title>
+    <title>Laundry System - Sign Up</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
